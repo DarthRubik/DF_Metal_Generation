@@ -294,11 +294,8 @@ class Metal {
         output += `\n[NAME:make ${this.name.toLowerCase()} bars]`;
         output += `\n[BUILDING:SMELTER:NONE]`;
         output += `\n[REAGENT:A:150:BAR:NO_SUBTYPE:METAL:${this.precursor.name.toUpperCase()}]`;
-        if (this.extra_ingredient == 'flux') {
-          output += `\n[REAGENT:B:1:BOULDER:NO_SUBTYPE:NONE:NONE][REACION_CLASS:FLUX]`;
-        } else {
-            output += `\n[REAGENT:B:1:BOULDER:NO_SUBTYPE:INORGANIC:${this.extra_ingredient.toUpperCase()}]`;
-        }
+        output += `\n[REAGENT:B:${extra_ingredients[this.extra_ingredient].reagent_desc}]`
+        output += `${extra_ingredients[this.extra_ingredient].modifiers}`
         output += `\n[PRODUCT:100:1:BAR:NO_SUBTYPE:METAL:${this.name.toUpperCase()}]`;
         output += `[PRODUCT_DIMENSION:150]\n[FUEL]\n[SKILL:SMELT]`;
         return output;

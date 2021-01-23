@@ -147,31 +147,94 @@ function generateMetals(number_of_metals, number_of_alloys=0, number_of_advanced
   return [metals, ores];
 }
 
+const extra_ingredients = {
+    'flux': {
+        'difficulty':1.2,
+        'modifiers':'[REACION_CLASS:FLUX]',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:NONE:NONE'
+    },
+    'cinnabar': {
+        'difficulty':1.4,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:CINNABAR'
+    },
+    'gypsum': {
+        'difficulty':2,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:GYPSUM'
+    },
+    'graphite': {
+        'difficulty':2.3,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:GRAPHITE'
+    },
+    'brimstone': {
+        'difficulty':3,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:BRIMSTONE'
+    },
+    'realgar': {
+        'difficulty':2.5,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:REALGAR'
+    },
+    'orpiment': {
+        'difficulty':2.6,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:ORPIMENT'
+    },
+    'ilmenite': {
+        'difficulty':1.7,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:ILMENITE'
+    },
+    'rutile': {
+        'difficulty':2.3,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:RUTILE'
+    },
+    'chromite': {
+        'difficulty':1.6,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:CHROMITE'
+    },
+    'borax': {
+        'difficulty':5,
+        'modifiers':'',
+        'reagent_desc':'1:BOULDER:NO_SUBTYPE:INORGANIC:BORAX'
+    },
+    'wax': {
+        'difficulty':4,
+        'modifiers':'[REACTION_CLASS:WAX]',
+        'reagent_desc':'150:GLOB:NONE:NONE:NONE'
+    },
+    'quick lime': {
+        'difficulty':2,
+        'modifiers':'',
+        'reagent_desc':'150:POWDER_MISC:NONE:INORGANIC:QUICKLIME'
+    },
+    'milk': {
+        'difficulty':1,
+        'modifiers':'[REACTION_CLASS:MILK]\n'+
+        '[REAGENT:container:1:NONE:NONE:NONE:NONE]\n'+
+                '   [CONTAINS:B]\n' + // Reagent 'B' is the extra ingredient
+                '   [PRESERVE_REAGENT]\n' +
+                '   [DOES_NOT_DETERMINE_PRODUCT_AMOUNT]',
+        'reagent_desc':'150:NONE:NONE:NONE:NONE'
+    }
+};
 function generateAdvancedChain(base_metal, length, chain_names) {
   /** Make an advanced metal production chain.
   
   Making steel first requires making pig iron using flux. This makes it harder to do which is neat.
   */
-  const extra_ingredients = {
-    'flux': 1.2,
-    'cinnabar': 1.4,
-    'gypsum': 2,
-    'graphite': 2.3,
-    'brimstone': 3,
-    'realgar': 2.5,
-    'orpiment': 2.6,
-    'ilmenite': 1.7,
-    'rutile': 2.3,
-    'chromite': 1.6,
-    'borax': 5
-    };
   let output = [];
   let difficulty_bonus = 1;
   let precursor = base_metal;
   let extra_ingredient;
   for (let i=0; i<length; i++) {
     extra_ingredient = randomChoice(Object.keys(extra_ingredients))[0];
-    difficulty_bonus *= extra_ingredients[extra_ingredient];
+    difficulty_bonus *= extra_ingredients[extra_ingredient].difficulty;
     if (i < length-1) {
       precursor = makeStepMetal(precursor, extra_ingredient, chain_names[i]);
       output = output.concat(precursor);
